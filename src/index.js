@@ -12,51 +12,63 @@
  * http://newsapi.org/v2/everything?q=cat&language=en&pageSize=5&page=1
  */
 
-import articlesTpl from './templates/articles.hbs';
+// import articlesTpl from './templates/articles.hbs';
 import './css/common.css';
-import NewsApiService from './js/news-service';
-import LoadMoreBtn from './js/components/load-more-btn';
+// import NewsApiService from './js/news-service';
+// import LoadMoreBtn from './js/components/load-more-btn';
+
+const options = {
+  headers: {
+    Authorization: '57cac8b7974a445687521e4c2c792a41',
+  },
+};
+
+const URL =
+  'https://newsapi.org/v2/everything?q=car&language=en&pageSize=5&page=1';
+fetch(URL, options)
+  .then(r => r.json())
+  .then(console.log);
 
 const refs = {
   searchForm: document.querySelector('.js-search-form'),
   articlesContainer: document.querySelector('.js-articles-container'),
 };
-const loadMoreBtn = new LoadMoreBtn({
-  selector: '[data-action="load-more"]',
-  hidden: true,
-});
-const newsApiService = new NewsApiService();
+// const loadMoreBtn = new LoadMoreBtn({
+//   selector: '[data-action="load-more"]',
+//   hidden: true,
+// });
+// const newsApiService = new NewsApiService();
 
-refs.searchForm.addEventListener('submit', onSearch);
-loadMoreBtn.refs.button.addEventListener('click', fetchArticles);
+// refs.searchForm.addEventListener('submit', onSearch);
+// loadMoreBtn.refs.button.addEventListener('click', fetchArticles);
 
-function onSearch(e) {
-  e.preventDefault();
+// function onSearch(e) {
+//   e.preventDefault();
 
-  newsApiService.query = e.currentTarget.elements.query.value;
+//   newsApiService.query = e.currentTarget.elements.query.value;
 
-  if (newsApiService.query === '') {
-    return alert('Введи что-то нормальное');
-  }
+//   if (newsApiService.query === '') {
+//     return alert('Введи что-то нормальное');
+//   }
 
-  loadMoreBtn.show();
-  newsApiService.resetPage();
-  clearArticlesContainer();
-  fetchArticles();
-}
+//   loadMoreBtn.show();
+//   newsApiService.resetPage();
+//   clearArticlesContainer();
+//   fetchArticles();
+// }
 
-function fetchArticles() {
-  loadMoreBtn.disable();
-  newsApiService.fetchArticles().then(articles => {
-    appendArticlesMarkup(articles);
-    loadMoreBtn.enable();
-  });
-}
+// function fetchArticles() {
+//   loadMoreBtn.disable();
+//   newsApiService.fetchArticles().then(articles => {
+//     appendArticlesMarkup(articles);
+//     loadMoreBtn.enable();
+//   });
+// }
 
-function appendArticlesMarkup(articles) {
-  refs.articlesContainer.insertAdjacentHTML('beforeend', articlesTpl(articles));
-}
+// function appendArticlesMarkup(articles) {
+//   refs.articlesContainer.insertAdjacentHTML('beforeend', articlesTpl(articles));
+// }
 
-function clearArticlesContainer() {
-  refs.articlesContainer.innerHTML = '';
-}
+// function clearArticlesContainer() {
+//   refs.articlesContainer.innerHTML = '';
+// }
