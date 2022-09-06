@@ -12,27 +12,57 @@
  * http://newsapi.org/v2/everything?q=cat&language=en&pageSize=5&page=1
  */
 
-// import articlesTpl from './templates/articles.hbs';
+import articlesTpl from './templates/articles.hbs';
 import './css/common.css';
-// import NewsApiService from './js/news-service';
-// import LoadMoreBtn from './js/components/load-more-btn';
-
-const options = {
-  headers: {
-    Authorization: '57cac8b7974a445687521e4c2c792a41',
-  },
-};
-
-const URL =
-  'https://newsapi.org/v2/everything?q=car&language=en&pageSize=5&page=1';
-fetch(URL, options)
-  .then(r => r.json())
-  .then(console.log);
+import NewsApiService from './js/news-service';
+import LoadMoreBtn from './js/components/load-more-btn';
 
 const refs = {
   searchForm: document.querySelector('.js-search-form'),
   articlesContainer: document.querySelector('.js-articles-container'),
+  //   loadMoreBtn: document.querySelector('[data-action="load-more"]'),
 };
+
+const loadMoreBtn = new LoadMoreBtn({
+  selector: '[data-action="load-more" ]',
+  hidden: true,
+});
+console.log(loadMoreBtn);
+const newsAPIService = new NewsApiService();
+
+refs.searchForm.addEventListener('submit', onSearch);
+loadMoreBtn.refs.button.addEventListener('click', fetchArticles);
+
+function onSearch(e) {
+  e.preventDefault();
+
+  newsAPIService.q = e.currentTarget.elements.query.value;
+
+  if (newsAPIService.q === '') {
+    return alert('Insert data to search');
+  }
+  loadMoreBtn.show();
+  newsAPIService.resetPages();
+  clearArticlesContainer();
+  fetchArticles();
+}
+
+function fetchArticles() {
+  loadMoreBtn.disable();
+  newsAPIService.fetchArticles().then(articles => {
+    appendArticlesMarkup(articles);
+    loadMoreBtn.enable();
+  });
+}
+
+function appendArticlesMarkup(articles) {
+  refs.articlesContainer.insertAdjacentHTML('beforeend', articlesTpl(articles));
+}
+
+function clearArticlesContainer() {
+  refs.articlesContainer.innerHTML = '';
+}
+
 // const loadMoreBtn = new LoadMoreBtn({
 //   selector: '[data-action="load-more"]',
 //   hidden: true,
