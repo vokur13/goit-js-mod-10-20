@@ -27,7 +27,6 @@ const loadMoreBtn = new LoadMoreBtn({
   selector: '[data-action="load-more" ]',
   hidden: true,
 });
-console.log(loadMoreBtn);
 const newsAPIService = new NewsApiService();
 
 refs.searchForm.addEventListener('submit', onSearch);
@@ -35,6 +34,10 @@ loadMoreBtn.refs.button.addEventListener('click', fetchArticles);
 
 function onSearch(e) {
   e.preventDefault();
+
+  console.log(e.currentTarget.elements);
+  console.log(e.currentTarget.elements.query);
+  console.log(e.currentTarget.elements.query.value);
 
   newsAPIService.q = e.currentTarget.elements.query.value;
 
